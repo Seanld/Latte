@@ -17,11 +17,11 @@ def main(sargs):
 		url = "https://raw.githubusercontent.com/Seanld/Latte/master/public-packages/"
 		print("Downloading " + packagec)
 		try:
-			request = requests.get(url+packagec)
+			request = requests.get(url+packagec, stream=True)
 		except:
 			print("Package doesn't exist")
-		data = request.text
-		opened = open(packagec, "w")
+		data = request.raw.read()
+		opened = open(packagec, "wb")
 		opened.write(data)
 		opened.close()
 		# Now inflate the new package, and move all contents to correct locations
