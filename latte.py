@@ -20,7 +20,7 @@ def main(sargs):
 			request = requests.get(url+packagec)
 		except:
 			print("Package doesn't exist")
-		data = requests.text
+		data = request.text
 		opened = open(packagec, "w")
 		opened.write(data)
 		opened.close()
