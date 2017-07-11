@@ -4,7 +4,8 @@ import requests
 import sys
 import argparse
 import tarfile
-import os
+import os.rename, os.remove
+import shutil.rmtree
 
 def main(sargs):
 	parser = argparse.ArgumentParser()
@@ -35,7 +36,7 @@ def main(sargs):
 		os.rename(args.package+"/index.py", "stash_extensions/bin/"+args.package+".py")
 		os.mkdir("stash_extensions/bin/"+args.package)
 		os.rename(args.package+"/lib", "stash_extensions/bin/"+args.package+"/lib")
-		os.rmdir(args.package)
+		shutil.rmtree(packagec)
 		print("Successfully installed!")
 	elif args.method == "remove":
 		pass # Uninstall a package
