@@ -4,8 +4,8 @@ import requests
 import sys
 import argparse
 import tarfile
-import os.rename, os.remove
-import shutil.rmtree
+from os import mkdir, rename
+from shutil import rmtree
 
 def main(sargs):
 	parser = argparse.ArgumentParser()
@@ -32,11 +32,11 @@ def main(sargs):
 		tar.close()
 		# Move to correct locations
 		print("Installing")
-		os.rename(args.package+"/meta.latte", "stash_extensions/bin/"+args.package+".latte")
-		os.rename(args.package+"/index.py", "stash_extensions/bin/"+args.package+".py")
+		rename(args.package+"/meta.latte", "stash_extensions/bin/"+args.package+".latte")
+		rename(args.package+"/index.py", "stash_extensions/bin/"+args.package+".py")
 		os.mkdir("stash_extensions/bin/"+args.package)
-		os.rename(args.package+"/lib", "stash_extensions/bin/"+args.package+"/lib")
-		shutil.rmtree(packagec)
+		rename(args.package+"/lib", "stash_extensions/bin/"+args.package+"/lib")
+		rmtree(packagec)
 		print("Successfully installed!")
 	elif args.method == "remove":
 		pass # Uninstall a package
