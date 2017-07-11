@@ -4,7 +4,7 @@ import requests
 import sys
 import argparse
 import tarfile
-from os import mkdir, rename
+from os import remove, mkdir, rename
 from shutil import rmtree
 
 def main(sargs):
@@ -36,7 +36,7 @@ def main(sargs):
 		rename(args.package+"/index.py", "stash_extensions/bin/"+args.package+".py")
 		os.mkdir("stash_extensions/bin/"+args.package)
 		rename(args.package+"/lib", "stash_extensions/bin/"+args.package+"/lib")
-		rmtree(packagec)
+		remove(packagec)
 		print("Successfully installed!")
 	elif args.method == "remove":
 		pass # Uninstall a package
