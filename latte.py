@@ -32,16 +32,20 @@ def main(sargs):
 		tar.close()
 		# Move to correct locations
 		print("Installing")
-		mkdir("stash_extensions/bin/"+args.package)
-		rename(args.package+"/meta.latte", "stash_extensions/bin/"+args.package+"/meta.latte")
+		try:
+			mkdir("stash_extensions/latte/"+args.package)
+		except:
+			mkdir("stash_extensions/latte")
+			mkdir("stash_extensions/latte/"+args.package)
+		rename(args.package+"/meta.latte", "stash_extensions/latte/"+args.package+"/meta.latte")
 		rename(args.package+"/index.py", "stash_extensions/bin/"+args.package+".py")
-		rename(args.package+"/lib", "stash_extensions/bin/"+args.package+"/lib")
+		rename(args.package+"/lib", "stash_extensions/latte/"+args.package+"/lib")
 		remove(packagec)
 		rmtree(args.package)
 		print("Successfully installed!")
 	elif args.method == "remove":
 		remove("stash_extensions/bin/"+args.package+".py")
-		rmtree("stash_extensions/bin/"+args.package)
+		rmtree("stash_extensions/latte/"+args.package)
 		print("Removed "+args.package+" successfully!")
 	elif args.method == "update":
 		pass # Check for any Latte updates
