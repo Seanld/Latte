@@ -34,14 +34,30 @@ def main(sargs):
 		print("Installing")
 		rename(args.package+"/meta.latte", "stash_extensions/bin/"+args.package+".latte")
 		rename(args.package+"/index.py", "stash_extensions/bin/"+args.package+".py")
-		os.mkdir("stash_extensions/bin/"+args.package)
+		mkdir("stash_extensions/bin/"+args.package)
 		rename(args.package+"/lib", "stash_extensions/bin/"+args.package+"/lib")
 		remove(packagec)
+		remove(args.package)
 		print("Successfully installed!")
 	elif args.method == "remove":
-		pass # Uninstall a package
+		remove("stash_extensions/bin/"+args.package+".latte")
+		remove("stash_extensions/bin/"+args.package+".py")
+		mkdir("stash_extensions/bin/"+args.package)
+		print("Removed "+args.package+" successfully!")
 	elif args.method == "update":
 		pass # Check for any Latte updates
+	elif args.method == "new":
+		mkdir(args.package)
+		mkdir(args.package+"/lib")
+		config = open(args.package+"/"+args.package+".latte", "w")
+		config.write("str developer=Your name here\nstr description=Enter description of your app here\nfloat version=0.1")
+		config.close()
+		index = open(args.package+"/index.py", "w")
+		index.write("import sys\nimport argparse\n\ndef main(sargs):\n\tparser = argparse.ArgumentParser()\n\tparser.add_argument('echo', help='What you want the command to echo back.')\n\targs = parser.parse_args(sargs)\n\t\n\tprint('Echoing back: '+args.echo)\n\nif __name__ == '__main__':\n\tmain(sys.argv[1:]")
+		index.close()
+		external = open(args.package+"/lib/external.py", "w")
+		external.write("# You can put any extra programs or dependencies your command requires in this /lib folder. This is the best counter to a crowded /bin folder in StaSh.")
+		external.close()
 	else:
 		raise Exception("Unknown argument '" + args.method + "'!")
 
