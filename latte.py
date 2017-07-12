@@ -37,19 +37,19 @@ def main(sargs):
 		mkdir("stash_extensions/bin/"+args.package)
 		rename(args.package+"/lib", "stash_extensions/bin/"+args.package+"/lib")
 		remove(packagec)
-		remove(args.package)
+		rmtree(args.package)
 		print("Successfully installed!")
 	elif args.method == "remove":
 		remove("stash_extensions/bin/"+args.package+".latte")
 		remove("stash_extensions/bin/"+args.package+".py")
-		mkdir("stash_extensions/bin/"+args.package)
+		rmtree("stash_extensions/bin/"+args.package)
 		print("Removed "+args.package+" successfully!")
 	elif args.method == "update":
 		pass # Check for any Latte updates
 	elif args.method == "new":
 		mkdir(args.package)
 		mkdir(args.package+"/lib")
-		config = open(args.package+"/"+args.package+".latte", "w")
+		config = open(args.package+"/meta.latte", "w")
 		config.write("str developer=Your name here\nstr description=Enter description of your app here\nfloat version=0.1")
 		config.close()
 		index = open(args.package+"/index.py", "w")
