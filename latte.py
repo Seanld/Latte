@@ -33,19 +33,23 @@ def main(sargs):
 		# Move to correct locations
 		print("Installing")
 		try:
-			mkdir("stash_extensions/latte/"+args.package)
+			rename(args.package+"/meta.latte", "stash_extensions/latte/"+args.package+".latte")
 		except:
 			mkdir("stash_extensions/latte")
-			mkdir("stash_extensions/latte/"+args.package)
-		rename(args.package+"/meta.latte", "stash_extensions/latte/"+args.package+"/meta.latte")
+			rename(args.package+"/meta.latte", "stash_extensions/latte/"+args.package+".latte")
 		rename(args.package+"/index.py", "stash_extensions/bin/"+args.package+".py")
-		rename(args.package+"/lib", "stash_extensions/latte/"+args.package+"/lib")
+		try:
+			rename(args.package+"/lib", "stash_extensions/bin/_latte_externals/"+args.package)
+		except:
+			mkdir("stash_extensions/bin/_latte_externals")
+			rename(args.package+"/lib", "stash_extensions/bin/_latte_externals/"+args.package)
 		remove(packagec)
 		rmtree(args.package)
 		print("Successfully installed!")
 	elif args.method == "remove":
+		rmtree("stash_extensions/bin/_latte_externals/"+args.package)
 		remove("stash_extensions/bin/"+args.package+".py")
-		rmtree("stash_extensions/latte/"+args.package)
+		remove("stash_extensions/latte/"+args.package+".latte")
 		print("Removed "+args.package+" successfully!")
 	elif args.method == "update":
 		pass # Check for any Latte updates
