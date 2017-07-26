@@ -8,7 +8,7 @@ NOTICE: Latte is built to run on the StaSh shell. Make sure you have that instal
 
 To install Latte to your Pythonista application, copy the below code, go to your Pythonista line-interpreter (the panel that swipes over on the right, that lets you type in Python code line-by-line), and paste the code, and run it. This should run the installer program provided in the repository. Once it starts running, you should start seeing your new package manager being installed to your StaSh.
 
-```
+```python
 import requests as r; exec(r.get("https://raw.githubusercontent.com/Seanld/Latte/master/installer.py").text);
 ```
 
