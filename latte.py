@@ -44,12 +44,12 @@ class SWConfig (object): # Parser for the config files such as the repository li
 		
 def download_package(url, package_name): # Handles the installation of packages directories (since they're no longer tarfiles)
 	content_listing = ["bin.py", "meta.latte"]
-	mkdir(package_name)
+	mkdir(ROOT+"/"+package_name)
 	for item in content_listing:
 		requested = requests.get(url+"/"+package_name+"/"+item)
 		content = requested.text
 		requested.close()
-		opened = open(package_name+"/"+item, "w")
+		opened = open(ROOT+"/"+package_name+"/"+item, "w")
 		opened.write(content)
 		opened.close()
 
@@ -99,7 +99,7 @@ def main(sargs):
 		print(Green("SUCCESS") + ": Package installed!")
 	elif args.method == "remove":
 		remove(ROOT+"/stash_extensions/bin/"+args.package+".py")
-		remove(ROOT"/stash_extensions/latte/"+args.package+".latte")
+		remove(ROOT+"/stash_extensions/latte/"+args.package+".latte")
 		print(Green("SUCCESS") + ": Removed "+args.package+" successfully!")
 	elif args.method == "update":
 		print("Jeez! Sorry, but we are currently working on self-update capabilities. For now, just redo the install process to update.")
