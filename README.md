@@ -2,7 +2,15 @@
 
 `apt-get` for Pythonista.
 
-*NOTE:* _There is a ton of documentation located over at http://seanld.me/latte!_
+*NOTE:* _There is a ton of introductory documentation located over at http://seanld.me/latte!_
+
+## What's The Point?
+
+When I was using (StaSh)[https://github.com/ywangd/stash] on Pythonista, I found it really annoying that I had to constantly run self-extracting Python scripts to install various add-ons and commands for StaSh. Because of that, I decided to create a simple utility that allows the creation, hosting, and sharing of software without hassle.
+
+Now users of StaSh can easily communicate their software to other users. No more transfer problems.
+
+Latte is also a platform for easily creating your own commands for StaSh. It allows you to install packages that install programs to StaSh's `stash_extensions/bin` directory. Now you can create your own commands!
 
 ## Installing
 
@@ -16,15 +24,7 @@ import requests as r; exec(r.get("https://raw.githubusercontent.com/Seanld/Latte
 
 ## Getting Started
 
-Everything should have been successfully installed, and you should now be able to run your brand new `latte` command in the StaSh shell.
-
-To install a new package from _https://github.com/Seanld/Latte/master/public-packages_, just run `latte install <package-name>`. If you want to remove that package that you have installed, just run `latte remove <package-name>`. In order to update Latte to the newest version, just run `latte update`.
-
-Latte is compatible with more than just the default repository that I provide here on this GitHub repo. Anyone hosting a Latte repository can share their URL, and you can install packages from said repository.
-
-To change the URL of the repository Latte is pointed at, just run `latte point <repo-url>`.
-
-NOTE: Some of these commands are being pre-documented, meaning that they might not work yet. I'm just writing them down so that everyone has a general idea of how this system will turn out. 
+If you want to learn how to properly use Latte, you can head over to http://seanld.me/latte. There's plenty of information over there to get you started!
 
 ## Congratulations
 
