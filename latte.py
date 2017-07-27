@@ -6,6 +6,12 @@ import argparse
 from os import remove, mkdir, rename, listdir
 from shutil import rmtree
 
+cwd = os.getcwd()
+documentsIndex = cwd.index("Documents")
+documentsIndex += len("Documents")
+ROOT = cwd[:documentsIndex]
+print(ROOT)
+
 class ansi:
 	HEADER = '\033[95m'
 	BLUE = '\033[94m'
