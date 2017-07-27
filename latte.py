@@ -10,7 +10,6 @@ cwd = os.getcwd()
 documentsIndex = cwd.index("Documents")
 documentsIndex += len("Documents")
 ROOT = cwd[:documentsIndex]
-print(ROOT)
 
 class ansi:
 	HEADER = '\033[95m'
@@ -91,16 +90,16 @@ def main(sargs):
 		# Move to correct locations
 		print("Installing")
 		try:
-			rename(package_name+"/meta.latte", "/stash_extensions/latte/"+package_name+".latte")
+			rename(ROOT+"/"+package_name+"/meta.latte", ROOT+"/stash_extensions/latte/"+package_name+".latte")
 		except:
-			mkdir("/stash_extensions/latte")
-			rename(package_name+"/meta.latte", "/stash_extensions/latte/"+package_name+".latte")
-		rename(package_name+"/bin.py", "/stash_extensions/bin/"+package_name+".py")
-		rmtree(package_name)
+			mkdir(ROOT+"/stash_extensions/latte")
+			rename(ROOT+"/"+package_name+"/meta.latte", ROOT+"/stash_extensions/latte/"+package_name+".latte")
+		rename(ROOT+"/"+package_name+"/bin.py", ROOT+"/stash_extensions/bin/"+package_name+".py")
+		rmtree(ROOT+"/"+package_name)
 		print(Green("SUCCESS") + ": Package installed!")
 	elif args.method == "remove":
-		remove("/stash_extensions/bin/"+args.package+".py")
-		remove("/stash_extensions/latte/"+args.package+".latte")
+		remove(ROOT+"/stash_extensions/bin/"+args.package+".py")
+		remove(ROOT"/stash_extensions/latte/"+args.package+".latte")
 		print(Green("SUCCESS") + ": Removed "+args.package+" successfully!")
 	elif args.method == "update":
 		print("Jeez! Sorry, but we are currently working on self-update capabilities. For now, just redo the install process to update.")
