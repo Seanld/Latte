@@ -2,6 +2,8 @@
 
 `apt-get` for Pythonista.
 
+*NOTE:* _There is a ton of documentation located over at http://seanld.me/latte!_
+
 ## Installing
 
 NOTICE: Latte is built to run on the StaSh shell. Make sure you have that installed before you run the installer code.
