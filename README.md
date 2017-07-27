@@ -1,3 +1,5 @@
+![Latte's logo](latte.png)
+
 # Latte
 
 `apt-get` for Pythonista.
