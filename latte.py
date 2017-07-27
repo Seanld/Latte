@@ -11,22 +11,19 @@ documentsIndex = cwd.index("Documents")
 documentsIndex += len("Documents")
 ROOT = cwd[:documentsIndex]
 
-class ansi:
-	HEADER = '\033[95m'
-	BLUE = '\033[94m'
-	GREEN = '\033[92m'
-	ORANGE = '\033[93m'
-	RED = '\033[91m'
-	ENDC = '\033[0m'
-	BOLD = '\033[1m'
-	UNDERLINE = '\033[4m'
-
-def Orange(text):
-	return ansi.ORANGE+text+ansi.ENDC
-def Green(text):
-	return ansi.GREEN+text+ansi.ENDC
-def Red(text):
-	return ansi.RED+text+ansi.ENDC
+def stoutput(header, text, mode):
+	if mode == "warning":
+		color = 'orange'
+	elif mode == "alert":
+		color = 'red'
+	elif mode == "success":
+		color = 'lime'
+	else:
+		color = 'white'
+	header = _stash.text_color(header, color)
+	text = _stash.text_color(": "+text, 'white')
+	
+	print(header + text)
 		
 class SWConfig (object): # Parser for the config files such as the repository listing.
 	def __init__(self, content):
@@ -64,7 +61,7 @@ def main(sargs):
 		opened.close()
 	except:
 		opened = open(".latte-repos.swconf", "w")
-		print(Orange("PROBLEM") + ": Repository listing doesn't exist, rebuilding to default...")
+		stoutput("WARNING", "Repository listing doesn't exist, rebuilding to default...", "warning")
 		opened.write("universe=https://raw.githubusercontent.com/Seanld/latte-universe/master")
 		opened.close()
 	
@@ -79,14 +76,14 @@ def main(sargs):
 			package_name = packageSplitted[1]
 			repo_to_use = REPOSITORIES[packageSplitted[0]]
 		except IndexError:
-			print(Orange("WARNING") + ": Did not specify repository, using universe repository instead.")
+			
 			repo_to_use = REPOSITORIES["universe"]
 			package_name = packageSplitted[0]
-		print("Downloading " + repo_to_use + "/" + package_name)
+		stoutput("WARNING", "No repository sepcified, using universe as default...")
 		try:
 			download_package(repo_to_use, package_name)
 		except:
-			print(Red("ERROR") + ": Couldn't find package")
+			stoutput("ERROR", "Couldn't find package", "error")
 		# Move to correct locations
 		print("Installing")
 		try:
@@ -96,11 +93,11 @@ def main(sargs):
 			rename(ROOT+"/"+package_name+"/meta.latte", ROOT+"/stash_extensions/latte/"+package_name+".latte")
 		rename(ROOT+"/"+package_name+"/bin.py", ROOT+"/stash_extensions/bin/"+package_name+".py")
 		rmtree(ROOT+"/"+package_name)
-		print(Green("SUCCESS") + ": Package installed!")
+		stoutput("SUCCESS", package_name+" successfully installed!", "success")
 	elif args.method == "remove":
 		remove(ROOT+"/stash_extensions/bin/"+args.package+".py")
 		remove(ROOT+"/stash_extensions/latte/"+args.package+".latte")
-		print(Green("SUCCESS") + ": Removed "+args.package+" successfully!")
+		stoutput("SUCCESS", args.package+" removed!", "success")
 	elif args.method == "update":
 		print("Jeez! Sorry, but we are currently working on self-update capabilities. For now, just redo the install process to update.")
 	elif args.method == "new":
@@ -112,9 +109,9 @@ def main(sargs):
 			index = open(args.package+"/bin.py", "w")
 			index.write("# This is just an example template. You can change this all you like.\n\nimport sys\nimport argparse\n\ndef main(sargs):\n\tparser = argparse.ArgumentParser()\n\tparser.add_argument('echo', help='What you want the command to echo back.')\n\targs = parser.parse_args(sargs)\n\t\n\tprint('Echoing back: '+args.echo)\n\nif __name__ == '__main__':\n\tmain(sys.argv[1:])")
 			index.close()
-			print(Green("SUCCESS") + ": Made new package template '"+args.package+"'!")
+			stoutput("SUCCESS", "Generated package template for "+args.package+"! It's inside your current working directory.", success)
 		except:
-			print(Red("ERROR") + ": Couldn't build, directory already exists.")
+			stoutput("ERROR", "Couldn't generate, directory may already exist.", "error")
 	elif args.method == "add-repo":
 		try:
 			request = requests.get(args.package+"/init.latte")
@@ -125,9 +122,9 @@ def main(sargs):
 			repo_listing = open(".latte-repos.swconf", "a")
 			repo_listing.write("\n"+nickname+"="+args.package)
 			repo_listing.close()
-			print(Green("SUCCESS") + ": '"+nickname+"' added to repositories!")
+			stoutput("SUCCESS", nickname+" added to repositories!", "success")
 		except:
-			print(Orange("REPO ISSUE") + ": Either repository doesn't exist, or does not contain an 'init.latte' file.")
+			stoutput("ERROR", "Either repository doesn't exist, or does not contain an 'init.latte' file.", "error")
 	elif args.method == "list-repos":
 		if args.package == "all":
 			opened = open(".latte-repos.swconf")
@@ -135,9 +132,9 @@ def main(sargs):
 			opened.close()
 			as_config = SWConfig(content)
 			for repo in as_config.keys():
-				print(Green(repo) + ": " + Orange(as_config[repo]))
+				stoutput(repo, as_config[repo], "success")
 	else:
-		print(Red("SYNTAX ERROR") + ": Unknown command '"+args.method+"'!")
+		stoutput("ERROR", "Unknown command '"+args.method+"'!", "error")
 
 if __name__ == "__main__":
 	main(sys.argv[1:])
