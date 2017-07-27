@@ -2,7 +2,7 @@ import requests
 
 print("Downloading...")
 
-request = requests.get("https://raw.githubusercontent.com/Seanld/Latte/master/latte.py")
+request = requests.get("https://raw.githubusercontent.com/Seanld/Latte/dev/latte.py")
 data = request.text
 
 print("Installing...")
