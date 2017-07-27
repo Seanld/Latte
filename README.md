@@ -1,4 +1,4 @@
-![Latte's logo](latte.png)
+![Latte's logo](latte.png =120x120)
 
 # Latte
 
