@@ -34,7 +34,8 @@ def Red(text):
     return ansi.RED + text + ansi.ENDC
 
 
-class SWConfig(object):  # Parser for config files like the repository listing
+class SWConfig(object):
+    """A parser for config files such as the repository listing."""
     def __init__(self, content):
         self.data = {}
         for line in content.splitlines():
