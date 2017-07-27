@@ -1,4 +1,4 @@
-![Latte's logo](latte.png =120x120)
+<img src="latte.png" width="150px" height="150px" alt="Latte's logo" />
 
 # Latte
 
