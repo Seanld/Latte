@@ -25,7 +25,3 @@ import requests as r; exec(r.get("https://raw.githubusercontent.com/Seanld/Latte
 ## Getting Started
 
 If you want to learn how to properly use Latte, you can head over to http://seanld.me/latte. There's plenty of information over there to get you started!
-
-## Congratulations
-
-You now are set up to install packages from any compatible repository. If you want to create your own Latte package, just run `latte new <your-package-name>`, and you'll have a brand new folder in your current directory named whatever your called your package. Edit the `meta.latte` file inside of that new directory, and change the values to whatever your package requires.
