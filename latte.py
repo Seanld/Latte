@@ -44,9 +44,8 @@ class SWConfig (object): # Parser for the config files such as the repository li
 	def __init__(self, content):
 		self.data = {}
 		for line in content.splitlines():
-			key = line.split("=")[0]
-			value = line.split("=")[1]
-			self.data[key] = value
+			key, _, value = line.partition("=")
+			self.data[key.strip()] = value.strip()
 			
 	def __getitem__(self, key):
 		return self.data[key]
