@@ -3,13 +3,10 @@
 import requests
 import sys
 import argparse
-from os import remove, mkdir, rename, listdir
+import os
 from shutil import rmtree
 
-cwd = os.getcwd()
-documentsIndex = cwd.index("Documents")
-documentsIndex += len("Documents")
-ROOT = cwd[:documentsIndex]
+ROOT = os.path.join(os.path.expanduser('~'), 'Documents')
 
 class stansi: # Collection of Stash's ANSI escape codes.
 	bold = u"\x9b1m"
@@ -58,8 +55,8 @@ class SWConfig (object): # Parser for the config files such as the repository li
 		return self.data.keys()
 		
 def download_package(url, package_name): # Handles the installation of packages directories (since they're no longer tarfiles)
-	content_listing = ["bin.py", "meta.latte"]
-	mkdir(ROOT+"/"+package_name)
+	content_listing = ("bin.py", "meta.latte")
+	os.mkdir(ROOT+"/"+package_name)
 	for item in content_listing:
 		requested = requests.get(url+"/"+package_name+"/"+item)
 		content = requested.text
@@ -78,8 +75,7 @@ def main(sargs):
 	args = parser.parse_args(sargs)
 	
 	try:
-		opened = open(".latte-repos.swconf", "r")
-		opened.close()
+		open(".latte-repos.swconf", "r").close()
 	except:
 		opened = open(".latte-repos.swconf", "w")
 		print(Red("WARNING") + ": Repository listing doesn't exist, rebuilding to default...")
@@ -97,7 +93,6 @@ def main(sargs):
 			package_name = packageSplitted[1]
 			repo_to_use = REPOSITORIES[packageSplitted[0]]
 		except IndexError:
-			
 			repo_to_use = REPOSITORIES["universe"]
 			package_name = packageSplitted[0]
 		print(Red("WARNING") + ": No repository specified, using universe by default...")
@@ -109,17 +104,17 @@ def main(sargs):
 		# Move to correct locations
 		print("Installing")
 		try:
-			rename(ROOT+"/"+package_name+"/meta.latte", ROOT+"/stash_extensions/latte/"+package_name+".latte")
+			os.rename(ROOT+"/"+package_name+"/meta.latte", ROOT+"/stash_extensions/latte/"+package_name+".latte")
 		except:
-			mkdir(ROOT+"/stash_extensions/latte")
-			rename(ROOT+"/"+package_name+"/meta.latte", ROOT+"/stash_extensions/latte/"+package_name+".latte")
-		rename(ROOT+"/"+package_name+"/bin.py", ROOT+"/stash_extensions/bin/"+package_name+".py")
+			os.mkdir(ROOT+"/stash_extensions/latte")
+			os.rename(ROOT+"/"+package_name+"/meta.latte", ROOT+"/stash_extensions/latte/"+package_name+".latte")
+		os.rename(ROOT+"/"+package_name+"/bin.py", ROOT+"/stash_extensions/bin/"+package_name+".py")
 		rmtree(ROOT+"/"+package_name)
 		print(Green("SUCCESS") + ": Package '"+package_name+"' successfully installed!")
 	elif args.method == "remove":
 		try:
-			remove(ROOT+"/stash_extensions/bin/"+args.package+".py")
-			remove(ROOT+"/stash_extensions/latte/"+args.package+".latte")
+			os.remove(ROOT+"/stash_extensions/bin/"+args.package+".py")
+			os.remove(ROOT+"/stash_extensions/latte/"+args.package+".latte")
 		except:
 			print(Red("ERROR") + ": Couldn't remove package; not found in resources.")
 			sys.exit()
@@ -128,7 +123,7 @@ def main(sargs):
 		print("Jeez! Sorry, but we are currently working on self-update capabilities. For now, just redo the install process to update.")
 	elif args.method == "new":
 		try:
-			mkdir(args.package)
+			os.mkdir(args.package)
 			config = open(args.package+"/meta.latte", "w")
 			config.write("developer=Your name here\ndescription=Enter description of your app here\nversion=0.1")
 			config.close()
