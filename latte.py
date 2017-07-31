@@ -12,7 +12,7 @@ documentsIndex += len("Documents")
 ROOT = cwd[:documentsIndex]
 
 class stansi: # Collection of Stash's ANSI escape codes.
-	bold = u"\x9b1m"
+	bold = u"\033[1m"
 	underscore = u"\x9b4m"
 	attr_end = u"\x9b0m"
 	
@@ -42,6 +42,10 @@ def Green(text):
 	return stansi.fore_green+text+stansi.fore_end
 def Cyan(text):
 	return stansi.fore_cyan+text+stansi.fore_end
+def Success(text):
+	return stansi.fore_green+stansi.bold+text+stansi.attr_end
+def Error(text):
+	return stansi.fore_red+stansi.bold+text+stansi.attr_end
 		
 class SWConfig (object): # Parser for the config files such as the repository listing.
 	def __init__(self, content):
@@ -57,6 +61,14 @@ class SWConfig (object): # Parser for the config files such as the repository li
 	def keys(self):
 		return self.data.keys()
 		
+def remove_line(content, lines_list):
+	pointer = 0
+	for line in lines_list:
+		if content in line:
+			lines_list.pop(pointer)
+		pointer += 1
+	return lines_list
+		
 def download_package(url, package_name): # Handles the installation of packages directories (since they're no longer tarfiles)
 	content_listing = ["bin.py", "meta.latte"]
 	mkdir(ROOT+"/"+package_name)
@@ -65,7 +77,7 @@ def download_package(url, package_name): # Handles the installation of packages 
 		content = requested.text
 		requested.close()
 		if content == "404: Not Found\n":
-			print(Red("ERROR") + ": Package not found.")
+			print(Error("ERROR") + ": Package not found.")
 			sys.exit()
 		opened = open(ROOT+"/"+package_name+"/"+item, "w")
 		opened.write(content)
@@ -82,7 +94,7 @@ def main(sargs):
 		opened.close()
 	except:
 		opened = open(".latte-repos.swconf", "w")
-		print(Red("WARNING") + ": Repository listing doesn't exist, rebuilding to default...")
+		print(Error("WARNING") + ": Repository cache doesn't exist, rebuilding to default...")
 		opened.write("universe=https://raw.githubusercontent.com/Seanld/latte-universe/master")
 		opened.close()
 	
@@ -100,11 +112,11 @@ def main(sargs):
 			
 			repo_to_use = REPOSITORIES["universe"]
 			package_name = packageSplitted[0]
-		print(Red("WARNING") + ": No repository specified, using universe by default...")
+		print(Error("WARNING") + ": No repository specified, using universe by default...")
 		try:
 			download_package(repo_to_use, package_name)
 		except:
-			stoutput("ERROR", "Couldn't find package", "error")
+			print(Error("ERROR") + ": Failed to find package")
 			sys.exit()
 		# Move to correct locations
 		print("Installing")
@@ -115,15 +127,15 @@ def main(sargs):
 			rename(ROOT+"/"+package_name+"/meta.latte", ROOT+"/stash_extensions/latte/"+package_name+".latte")
 		rename(ROOT+"/"+package_name+"/bin.py", ROOT+"/stash_extensions/bin/"+package_name+".py")
 		rmtree(ROOT+"/"+package_name)
-		print(Green("SUCCESS") + ": Package '"+package_name+"' successfully installed!")
+		print(Success("SUCCESS") + ": Package '"+package_name+"' successfully installed!")
 	elif args.method == "remove":
 		try:
 			remove(ROOT+"/stash_extensions/bin/"+args.package+".py")
 			remove(ROOT+"/stash_extensions/latte/"+args.package+".latte")
 		except:
-			print(Red("ERROR") + ": Couldn't remove package; not found in resources.")
+			print(Error("ERROR") + ": Couldn't remove package; not found in resources.")
 			sys.exit()
-		print(Green("SUCCESS") + ": '"+args.package+"' removed!")
+		print(Success("SUCCESS") + ": '"+args.package+"' removed!")
 	elif args.method == "update":
 		print("Jeez! Sorry, but we are currently working on self-update capabilities. For now, just redo the install process to update.")
 	elif args.method == "new":
@@ -135,9 +147,9 @@ def main(sargs):
 			index = open(args.package+"/bin.py", "w")
 			index.write("# This is just an example template. You can change this all you like.\n\nimport sys\nimport argparse\n\ndef main(sargs):\n\tparser = argparse.ArgumentParser()\n\tparser.add_argument('echo', help='What you want the command to echo back.')\n\targs = parser.parse_args(sargs)\n\t\n\tprint('Echoing back: '+args.echo)\n\nif __name__ == '__main__':\n\tmain(sys.argv[1:])")
 			index.close()
-			print(Green("SUCCESS") + ": Package '"+args.package+"' generated, check current working directory!")
+			print(Success("SUCCESS") + ": Package '"+args.package+"' generated, check current working directory!")
 		except:
-			print(Red("ERROR") + ": Couldn't generate package; directory may already exist.")
+			print(Error("ERROR") + ": Couldn't generate package; directory may already exist.")
 	elif args.method == "add-repo":
 		try:
 			request = requests.get(args.package+"/init.latte")
@@ -148,9 +160,9 @@ def main(sargs):
 			repo_listing = open(".latte-repos.swconf", "a")
 			repo_listing.write("\n"+nickname+"="+args.package)
 			repo_listing.close()
-			print(Green("SUCCESS") + ": '"+nickname+"' added to repositories!")
+			print(Success("SUCCESS") + ": '"+nickname+"' added to repositories cache!")
 		except:
-			print(Red("ERROR") + ": Either repository doesn't exist, or does not contain an 'init.latte' file.")
+			print(Error("ERROR") + ": Either repository doesn't exist, or does not contain an 'init.latte' file.")
 	elif args.method == "list-repos":
 		if args.package == "all":
 			opened = open(".latte-repos.swconf")
@@ -159,8 +171,19 @@ def main(sargs):
 			as_config = SWConfig(content)
 			for repo in as_config.keys():
 				print(Cyan(repo) + ": " + Green(as_config[repo]))
+	elif args.method == "remove-repo":
+		opened = open(".latte-repos.swconf", "r")
+		data = opened.read().splitlines()
+		opened.close()
+		
+		removed = remove_line(args.package, data)
+		opened = open(".latte-repos.swconf", "w")
+		opened.write(removed)
+		opened.close()
+		
+		print(Success("SUCCESS") + ": Removed '" + args.package + "' from repository cache!")
 	else:
-		print(Red("ERROR") + ": Unknown command '"+args.method+"'!")
+		print(Error("ERROR") + ": Unknown command '"+args.method+"'!")
 
 if __name__ == "__main__":
 	main(sys.argv[1:])
