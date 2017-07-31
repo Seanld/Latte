@@ -178,7 +178,7 @@ def main(sargs):
 		
 		removed = remove_line(args.package, data)
 		opened = open(".latte-repos.swconf", "w")
-		opened.write(removed)
+		opened.writelines(removed)
 		opened.close()
 		
 		print(Success("SUCCESS") + ": Removed '" + args.package + "' from repository cache!")
