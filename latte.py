@@ -148,7 +148,7 @@ def main(sargs):
 			repo_listing = open(".latte-repos.swconf", "a")
 			repo_listing.write("\n"+nickname+"="+args.package)
 			repo_listing.close()
-			print(Green("SUCCESS") + ": '"++nickname"' added to repositories!")
+			print(Green("SUCCESS") + ": '" + nickname + "' added to repositories!")
 		except:
 			print(Red("ERROR") + ": Either repository doesn't exist, or does not contain an 'init.latte' file.")
 	elif args.method == "list-repos":
