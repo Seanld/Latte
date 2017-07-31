@@ -8,7 +8,7 @@
 
 ## What's The Point?
 
-When I was using (StaSh)[https://github.com/ywangd/stash] on Pythonista, I found it really annoying that I had to constantly run self-extracting Python scripts to install various add-ons and commands for StaSh. Because of that, I decided to create a simple utility that allows the creation, hosting, and sharing of software without hassle.
+When I was using [StaSh](https://github.com/ywangd/stash) on Pythonista, I found it really annoying that I had to constantly run self-extracting Python scripts to install various add-ons and commands for StaSh. Because of that, I decided to create a simple utility that allows the creation, hosting, and sharing of software without hassle.
 
 Now users of StaSh can easily communicate their software to other users. No more transfer problems.
 

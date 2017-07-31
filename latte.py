@@ -3,10 +3,10 @@
 import requests
 import sys
 import argparse
-from os import remove, mkdir, rename, listdir
+from os import remove, mkdir, rename, listdir, getcwd
 from shutil import rmtree
 
-cwd = os.getcwd()
+cwd = getcwd()
 documentsIndex = cwd.index("Documents")
 documentsIndex += len("Documents")
 ROOT = cwd[:documentsIndex]
